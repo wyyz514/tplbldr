@@ -56,8 +56,46 @@ The `build` function can be overloaded with an object containing other propertie
   - a template object (as described above in the _defining templates_ section)
   - a data set
   - the DOM target selector string
-  - otherBuildProps object (more info in [setProps](#setProps))
+  - otherBuildProps object (more info in [OtherBuildProps](#OtherBuildProps))
   - a boolean value indicating whether or not to render immediately
 - useful for generating templates of the same form but with different data property values. For example, contact lists, blog posts...anything list-like.
+
+### setProps
+- takes a data set and an attribute string to specify what element attribute to target. For example, the elements in the template can specify a `data-attr` attribute to indicate they need to be populated. `data-attr` will be the string passed into `setProps`
+- returns a function expecting the element to use to populate the data on its child elements.
+- A third argument can be passed into the `setProps` function containing other properties that should be used in the population of data on the elements.
+
+#### OtherBuildProps
+Example
+-------
+Assume the following data set.
+```js
+var person = {
+ first_name:"Anon",
+ middle_initial:"Y.",
+ last_name:"Mous",
+ email:"anonymous@fakemail.com",
+ id:666
+}
+```
+The properties `first_name`, `middle_initial` and `last_name` can be built into a single property `full_name`
+```js
+{
+ toBuild:{
+   full_name:['first_name', 'middle_initial', 'last_name'] //order matters  
+  },
+  //maybe we want a link to the profile using the id as a parameter
+  toLink: [
+   {
+     attrToFill:"profileLink",
+     link:"/{id}/profile"
+   }
+  ],
+  //values can also be overwritten or added
+  email:"anony@mous.com",
+  gender:"yes"
+}
+```
+The email property value will be overwritten by the one specified, and the gender property will be added. Below is a more complete example showing how to use and build the template using the above objects.
 
 ## Examples
