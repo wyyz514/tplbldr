@@ -56,7 +56,7 @@ The `build` function can be overloaded with an object containing other propertie
   - a template object (as described above in the _defining templates_ section)
   - a data set
   - the DOM target selector string
-  - otherBuildProps object (more info in [OtherBuildProps](#OtherBuildProps))
+  - otherBuildProps object (more info in [OtherBuildProps](# OtherBuildProps))
   - a boolean value indicating whether or not to render immediately
 - useful for generating templates of the same form but with different data property values. For example, contact lists, blog posts...anything list-like.
 
