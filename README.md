@@ -99,3 +99,21 @@ The properties `first_name`, `middle_initial` and `last_name` can be built into 
 The email property value will be overwritten by the one specified, and the gender property will be added. Below is a more complete example showing how to use and build the template using the above objects.
 
 ## Examples
+
+```js
+//template definition
+var personTpl = {
+ wrapper:{
+  classList:[],
+  el:'div',
+  listeners:[]
+ },
+ tpl:
+ "First Name: <div class='with-attr' data-attr='first_name'></div>"+
+ "Last Name: <div class='with-attr' data-attr='last_name'></div>"+
+ "Full Name: <div class='with-attr' data-attr='full_name'></div>"+
+ "Email: <div class='with-attr' data-attr='email'></div>"+
+ "Gender: <div class='with-attr' data-attr='gender'></div>"+
+ "Profile Link: <div class='with-attr' data-attr='profileLink'></div>"
+}
+```
