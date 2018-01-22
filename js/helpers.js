@@ -1,8 +1,4 @@
 var helpers = (function(){
-    var numberRegex = new RegExp(/\d/);
-    var ccRegex = new RegExp(/([0-9]{4})/);
-    var idRegex = new RegExp(/id/i);
-    var dontCapitalize = ['and', 'to', 'of', 'with', 'avec','les', 'des', 'del', 'et', 'est', 'du'];
     var wordBetweenBraces = new RegExp(/\{(.*?)\}/);
     /**
     makeRequest
@@ -112,7 +108,7 @@ var helpers = (function(){
                 }
             });
         }
-        
+
         /*
             paramLink = {
              link: '/{somethingToReplace}/path',
@@ -258,27 +254,6 @@ var helpers = (function(){
         }
     }
 
-    var toggleProgressBar = function() {
-        toggleClass("hidden")("#loading");
-    }
-
-    var createCounter = function(el) {
-        return {
-            up:function increment(){
-                var count = parseInt(numberRegex.exec(this.innerText)[0]) + 1;
-                this.innerText = this.innerText.replace(numberRegex, count);
-                return count;
-            }.bind(el),
-            down:function decrement(){
-                var count = parseInt(numberRegex.exec(this.innerText)[0]) - 1 < 0 ? 0 : parseInt(numberRegex.exec(this.innerText)[0]) - 1;
-                this.innerText = this.innerText.replace(numberRegex, count);
-                return count;
-            }.bind(el),
-            set:function set(val) {
-                this.innerText = this.innerText.replace(/\d/, val);
-            }.bind(el)
-        };
-    }
 
     function formatPrice(price) {
         var currency = arguments[1] || '$';
@@ -286,18 +261,6 @@ var helpers = (function(){
         var priceChunks = parsedPrice.split(".");
         var formattedPrice = ""+currency+""+ Math.round(price);
         return formattedPrice;
-    }
-
-    function disable(el) {
-        return function disableEl() {
-            $(el).prop('disabled', true);
-        }
-    }
-
-    function enable(el) {
-        return function enableEl() {
-            $(el).prop('disabled', false);
-        }
     }
 
     function capitalize(s) {
@@ -316,61 +279,6 @@ var helpers = (function(){
         }
     }
 
-    var typeaheadDataTransformer = function dataTransform(response) {
-        // Map the remote source JSON array to a JavaScript object array
-        if(!response.data.data)
-            return;
-        var dataSet = response.data.data.filter(function(d){
-            if(d){
-                return d;
-            }
-        })
-        .map(function(d){
-            d['shortName'] = d.departement && d.code ? d.departement+" "+d.code : "Course code not found";
-            d['name'] = typeof d.name === "string" ? d.name.toLowerCase() : "Name not found";
-            return d;
-        });
-        return dataSet;
-    }
-
-    var initTypeahead =   function initTypeahead(el, config) {
-        var typeahead = new Typeahead(el, config);
-        return typeahead;
-    }
-
-    function toast(message, duration, clearPrevious) {
-        var classList = arguments[3] ? arguments[3] : null;
-        if(clearPrevious)
-            $('.toast').remove();
-
-        Materialize.toast(message, duration, classList);
-    }
-
-    //from https://github.com/omarshammas/jquery.formance/blob/master/lib/jquery.formance.js
-    var formatPhoneNumber = function(phoneNumberString) {
-        var areaCode, first3, last4, phoneNumber, text, _ref;
-
-        phoneNumber = phoneNumberString.replace(/\D/g, '').match(/^(\d{0,3})?(\d{0,3})?(\d{0,4})?$/);
-        _ref = phoneNumber, phoneNumber = _ref[0], areaCode = _ref[1], first3 = _ref[2], last4 = _ref[3];
-        text = '';
-        if (areaCode != null) {
-            text += "(" + areaCode;
-        }
-        if ((areaCode != null ? areaCode.length : void 0) === 3) {
-            text += ") ";
-        }
-        if (first3 != null) {
-            text += "" + first3;
-        }
-        if ((first3 != null ? first3.length : void 0) === 3) {
-            text += " - ";
-        }
-        if (last4 != null) {
-            text += "" + last4;
-        }
-        return text;
-    };
-
     function filterBy(data, predicate) {
         return function() {
             var key = arguments[0] ? arguments[0] : "";
@@ -384,6 +292,23 @@ var helpers = (function(){
                     return datum;
             });    
         }
+    }
+
+    //dig into a nested object
+    //eg dig({...}, "some.path.to.some.value")
+    //returns the value
+    function dig(o, path) {
+        function _dig(arr, index, cont) {
+            //don't iterate over the last key
+            //instead pass it to the continuation
+            //to return the value
+            if(index == arr.length - 1) {
+                return cont(arr[index]);
+            }
+            //cont(arr[index]) == o[x] in the first invocation of _dig
+            return _dig(arr, index + 1, function(y){return cont(arr[index])[y]});
+        }
+        return _dig(path.split("."), 0, function(x){return o[x]});
     }
 
     var formatters = {};
@@ -410,6 +335,7 @@ var helpers = (function(){
         initTypeahead:initTypeahead,
         toast:toast,
         format: formatters,
-        filterBy:filterBy
+        filterBy:filterBy,
+        dig:dig
     }
 })();
