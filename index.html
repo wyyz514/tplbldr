@@ -10,20 +10,34 @@
         <script>
             var getRequest = helpers.makeRequest("GET");
             getRequest("https://jsonplaceholder.typicode.com/users").then(function(data) {
-                console.log(Object.prototype.toString.call(data))
+               
                 var personTpl = {
                     wrapper:{
                         classList:[],
                         el:'div',
-                        listeners:[]
+                        listeners:[{
+                            ev:"click",
+                            target:".with-attr",
+                            handler: function (e) {
+                                var targetElement = e.target;
+                                console.log(targetElement.innerHTML);
+                            }
+                        }]
                     },
                     tpl:
                     "Username: <div class='with-attr' data-attr='username'></div>"+
                     "Email: <div class='with-attr' data-attr='email'></div>"+
-                    "Website: <div class='with-attr' data-attr='website'></div>"
+                    "Website: <div class='with-attr' data-attr='company.name'></div><br>"
                 };
 
-                TplBuilder.getBuiltTemplate(personTpl, data, "body", null, true)
+                TplBuilder.getBuiltTemplate(personTpl, data, "body", {
+                    toBuild: {
+                        'username': ['email', 'username']
+                    },
+                    toFormat: {
+                        'username': ['lower', 'join', 'capitalize', 'lower']
+                    }
+                }, true)
                 
             }).catch(function(e) {
                 console.log(e);

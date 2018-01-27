@@ -62,9 +62,12 @@ TplBuilder.prototype.prepare = function() {
 
             if(listeners) {
                 listeners.map(function(l){
-                    //find the element to add the listener to
-                    var targetEl = elToReturn.querySelector(l.target);
-                    targetEl.addEventListener(l.ev, helpers.createEventHandler(l.handler.bind(elToReturn)));
+                    //find the element(s) to add the listener to
+                    var targetEl = elToReturn.querySelectorAll(l.target);
+                    var targetElArray = helpers.makeArray.call(targetEl);
+                    targetElArray.map(function(target) {
+                        target.addEventListener(l.ev, l.handler);
+                    });
                 });
             }
         }

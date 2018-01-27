@@ -1,5 +1,9 @@
 var helpers = (function(){
     var wordBetweenBraces = new RegExp(/\{(.*?)\}/);
+
+    function makeArray() {
+        return Array.prototype.slice.call(this);
+    }
     /**
     makeRequest
     ------------
@@ -69,11 +73,11 @@ var helpers = (function(){
         //note that if the same prop appears in a and b, the prop in a is used
         //and the one in b is ignored
         aKeys.forEach(function(key){
-            if(a.hasOwnProperty(key) && a[key]) {
-                newObj[key] = a[key];
+            if(a.hasOwnProperty(key) && dig(a, key) && !(b.hasOwnProperty(key) && dig(b, key))) {
+                newObj[key] = dig(a, key);
             }
-            else if(b.hasOwnProperty(key) && b[key]) {
-                newObj[key] = b[key];
+            else if(b.hasOwnProperty(key) && dig(b, key)){
+                newObj[key] = dig(b, key);
             }
             else {
                 newObj[key] = key + " not found";
@@ -101,10 +105,17 @@ var helpers = (function(){
         //if some properties need formatting
         //using pre-defined formatting functions
         if(b['toFormat']) {
-            b['toFormat'].map(function(key){
-                if(newObj[key]) {
+            var keys = Object.keys(b['toFormat']);
 
-                    newObj[key] = formatters[key](newObj[key]);
+            keys.map(function(key){
+                if(newObj[key]) {
+                    var value = newObj[key];
+
+                    newObj[key] = b['toFormat'][key].reduce(function(prev, next) {
+                        //if the key is not a type of formatter, it is the result
+                        //of a previous operation and is to be passed into the "next" formatter
+                        return formatters[next](formatters[prev] ? formatters[prev](value) : prev);
+                    });
                 }
             });
         }
@@ -131,7 +142,7 @@ var helpers = (function(){
                         newObj[newProp] = linked;
                     }
                 }catch(e) {
-                    console.log(e);
+                    console.error(e);
                 }
             });
         }
@@ -153,28 +164,19 @@ var helpers = (function(){
         return function setPropsOn(el) {
             var data = otherProps? combineProps(obj, otherProps) : obj;
             var childrenWithAttr = el.querySelectorAll(".with-attr");
-            var _childrenWithAttr = Array.prototype.slice.call(childrenWithAttr);
-            var dependentChildren = Array.prototype.slice.call(el.querySelectorAll(".has-dep"));
+            var _childrenWithAttr = makeArray.call(childrenWithAttr);
+
             _childrenWithAttr.map(function(c){
                 var key = c.getAttribute(attr);
 
                 if(key === "image" || key === 'avatar') {
-                    c.src = data[key];
+                    c.src = dig(data, key);
                 }
-                else if(idRegex.test(key))
-                    c.value = data[key];
                 else if(key.toLowerCase().match("link")){
-                    c.href = data[key];
+                    c.href = dig(data, key);
                 }
                 else {
-                    c.innerHTML = data[key] || "";
-                }
-            });
-
-            dependentChildren.map(function(depChild){
-                var dependency = depChild.getAttribute('data-depends');
-                if(!obj[dependency] || obj[dependency] == 0 ) {
-                    depChild.parentElement.removeChild(depChild);
+                    c.innerHTML = dig(data, key) || "";
                 }
             });
 
@@ -268,15 +270,19 @@ var helpers = (function(){
         if(typeof s === "string") {
             var chunks = s.toLowerCase().split(" ");
             var _chunks = chunks.map(function(c){
-                if(dontCapitalize.indexOf(c.trim()) >= 0) {
-                    return c;
-                }
-
                 if(c.length > 0 )
                     return c[0].toUpperCase().concat(c.substr(1).toLowerCase());
             });
             return _chunks.join(" ");
         }
+    }
+
+    function lower(s) {
+        return s.toLowerCase();
+    }
+
+    function join(s) {
+        return s.replace(/\s/g, "");
     }
 
     function filterBy(data, predicate) {
@@ -313,9 +319,9 @@ var helpers = (function(){
 
     var formatters = {};
 
-    formatters['price'] = formatters['price_plus_taxs'] = formatters['list_price'] = formatPrice;
-    formatters['name'] = formatters['textbookName'] = capitalize;
-    formatters['phone'] = formatPhoneNumber;
+    formatters['price'] = formatPrice;
+    formatters['capitalize'] = capitalize;
+    formatters['join'] = join; formatters['lower'] = lower;
 
     return {
         makeRequest:makeRequest,
@@ -326,16 +332,10 @@ var helpers = (function(){
         appendTo:appendTo,
         clear:clear,
         createEventHandler:createEventHandler,
-        toggleProgressBar:toggleProgressBar,
-        createCounter:createCounter,
-        disable:disable,
-        enable:enable,
         capitalize:capitalize,
-        dataTransform: typeaheadDataTransformer,
-        initTypeahead:initTypeahead,
-        toast:toast,
         format: formatters,
         filterBy:filterBy,
-        dig:dig
+        dig:dig,
+        makeArray: makeArray
     }
 })();
