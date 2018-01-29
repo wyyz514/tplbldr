@@ -91,14 +91,15 @@ var helpers = (function(){
             var newProp = "";
             keys.map(function(key){
                 b['toBuild'][key].map(function(prop){
-                    if(newObj[prop])
-                        newProp += newObj[prop] + " ";
+                    if(dig(newObj, prop))
+                        newProp += dig(newObj, prop) + " ";
                     else {
                         newProp = "";
                         return;
                     }
                 });
                 newObj[key] = newProp;
+                newProp = "";
             });
         }
 
@@ -108,16 +109,22 @@ var helpers = (function(){
             var keys = Object.keys(b['toFormat']);
 
             keys.map(function(key){
-                if(newObj[key]) {
-                    var value = newObj[key];
-
-                    newObj[key] = b['toFormat'][key].reduce(function(prev, next) {
-                        //if the key is not a type of formatter, it is the result
-                        //of a previous operation and is to be passed into the "next" formatter
-                        return formatters[next](formatters[prev] ? formatters[prev](value) : prev);
-                    });
+                if(dig(newObj, key)) {
+                    var value = dig(newObj, key);
+                    
+                    if(b['toFormat'][key].length == 1) {
+                        value = formatters[b['toFormat'][key][0]](value);
+                        newObj[key] = value;
+                    }
+                    else {
+                        var formatter = b['toFormat'][key].reduce(function(prev, next) {
+                            return compose( (typeof prev == "function" ? prev : formatters[prev]), (typeof next == "function" ? next : formatters[next]) );
+                        });
+                        newObj[key] = formatter(value);
+                    }
                 }
             });
+            console.log(newObj);
         }
 
         /*
@@ -170,13 +177,13 @@ var helpers = (function(){
                 var key = c.getAttribute(attr);
 
                 if(key === "image" || key === 'avatar') {
-                    c.src = dig(data, key);
+                    c.src = data[key] ? data[key] : dig(data, key);
                 }
                 else if(key.toLowerCase().match("link")){
-                    c.href = dig(data, key);
+                    c.href = data[key] ? data[key] : dig(data, key);
                 }
                 else {
-                    c.innerHTML = dig(data, key) || "";
+                    c.innerHTML = (data[key] ? data[key] : dig(data, key)) || "";
                 }
             });
 
@@ -322,7 +329,10 @@ var helpers = (function(){
     formatters['price'] = formatPrice;
     formatters['capitalize'] = capitalize;
     formatters['join'] = join; formatters['lower'] = lower;
-
+    formatters["upper"] = function (s) {
+        return s.toUpperCase();
+    }
+    
     return {
         makeRequest:makeRequest,
         setProps:setProps,

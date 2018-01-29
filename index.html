@@ -27,15 +27,22 @@
                     tpl:
                     "Username: <div class='with-attr' data-attr='username'></div>"+
                     "Email: <div class='with-attr' data-attr='email'></div>"+
-                    "Website: <div class='with-attr' data-attr='company.name'></div><br>"
+                    "Website: <div class='with-attr' data-attr='website'></div>"+
+                    "Company: <div class='with-attr' data-attr='company.name'></div>"+
+                    "City: <div class='with-attr' data-attr='residence'></div>"+
+                    "<br>"
                 };
 
                 TplBuilder.getBuiltTemplate(personTpl, data, "body", {
                     toBuild: {
-                        'username': ['email', 'username']
+                        username: ["name"],
+                        residence: ["address.suite", "address.city"]
                     },
                     toFormat: {
-                        'username': ['lower', 'join', 'capitalize', 'lower']
+                        username: ["lower", "join"],
+                        "email": ["lower"],
+                        "company.name": ["upper"],
+                        "address.city": ["capitalize"]
                     }
                 }, true)
                 
