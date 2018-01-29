@@ -30,6 +30,7 @@
                     "Website: <div class='with-attr' data-attr='website'></div>"+
                     "Company: <div class='with-attr' data-attr='company.name'></div>"+
                     "City: <div class='with-attr' data-attr='residence'></div>"+
+                    "Profile: <a class='with-attr' data-attr='profileLink'>Profile</a>"+
                     "<br>"
                 };
 
@@ -43,6 +44,12 @@
                         "email": ["lower"],
                         "company.name": ["upper"],
                         "address.city": ["capitalize"]
+                    },
+                    toLink: {
+                        'profileLink': {
+                            link:"/{id}/{username}/profile/{address.city}",
+                            "attrToFill": "profileLink"
+                        }
                     }
                 }, true)
                 

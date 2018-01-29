@@ -1,5 +1,5 @@
 var helpers = (function(){
-    var wordBetweenBraces = new RegExp(/\{(.*?)\}/);
+    var wordBetweenBraces = new RegExp(/\{(.*?)\}/g);
 
     function makeArray() {
         return Array.prototype.slice.call(this);
@@ -111,7 +111,7 @@ var helpers = (function(){
             keys.map(function(key){
                 if(dig(newObj, key)) {
                     var value = dig(newObj, key);
-                    
+
                     if(b['toFormat'][key].length == 1) {
                         value = formatters[b['toFormat'][key][0]](value);
                         newObj[key] = value;
@@ -134,19 +134,33 @@ var helpers = (function(){
             }
         */
         if(b['toLink']) {
-            b['toLink'].map(function(paramLink){
-                var linkWithParam = paramLink["link"];
+            var keys = Object.keys(b['toLink']);
+            var count = 0;
+            keys.map(function(key){
+                var linkWithParam = b["toLink"][key]['link'];
+                var linked = "";
                 try {
-                    var paramKey = wordBetweenBraces.exec(linkWithParam)[1];
-                    if(!paramKey)
-                        throw new Error("paramKey not found in toLink: can't find anything between braces");
-                    else {
-                        //hack
-                        var replacementParam = newObj[paramKey] ? newObj[paramKey] : newObj[paramLink.fallbackParam];
-                        var linked = linkWithParam.replace("{"+paramKey+"}", replacementParam);
-                        var newProp = paramLink['attrToFill'];
-                        newObj[newProp] = linked;
+
+                    var match;
+                    
+                    //find the word between the braces to replace
+                    while((match = wordBetweenBraces.exec(linkWithParam)) != null) {
+                        var paramKey = match[1];
+                        
+                        //find the value of the word in the object
+                        var replacementParam = dig(newObj, paramKey) ? 
+                            dig(newObj, paramKey) : 
+                            dig(newObj, b['toLink'][key].fallbackParam);
+
+                        linked = linked ? 
+                            linked.replace("{"+paramKey+"}", replacementParam) : 
+                            linkWithParam.replace("{"+paramKey+"}", replacementParam);
                     }
+
+                    newProp = b["toLink"][key]['attrToFill'];
+
+                    newObj[newProp] = linked;
+
                 }catch(e) {
                     console.error(e);
                 }
@@ -331,7 +345,7 @@ var helpers = (function(){
     formatters["upper"] = function (s) {
         return s.toUpperCase();
     }
-    
+
     return {
         makeRequest:makeRequest,
         setProps:setProps,
