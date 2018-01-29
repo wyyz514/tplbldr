@@ -124,7 +124,6 @@ var helpers = (function(){
                     }
                 }
             });
-            console.log(newObj);
         }
 
         /*
