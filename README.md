@@ -92,12 +92,11 @@ The properties `first_name`, `middle_initial` and `last_name` can be built into 
      link:"/{id}/profile"
    }
   ],
-  //values can also be overwritten or added
-  email:"anony@mous.com",
+  //new values can be added
   gender:"yes"
 }
 ```
-The email property value will be overwritten by the one specified, and the gender property will be added. Below is a more complete example showing how to use and build the template using the above objects.
+The gender property will be added. Below is a more complete example showing how to use and build the template using the above objects. I highly recommend playing around with the [JSBin](http://jsbin.com/reyeber/1/edit?js,output)
 
 ## Examples
 
