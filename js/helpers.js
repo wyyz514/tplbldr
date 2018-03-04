@@ -33,11 +33,12 @@ var helpers = (function(){
                     var xhr = new XMLHttpRequest();
                     xhr.open(method, url, true);
                     xhr.onreadystatechange = function() {
-                        //putting xhr.status == 404 as a hack
-                        //for busbud challenge
-                        //so the templates clear
-                        if(xhr.status == 200 || xhr.status == 404 && xhr.readyState == 4) {
+                        if(xhr.status == 200 && xhr.readyState == 4) {
                             resolve(JSON.parse(xhr.responseText));
+                        }
+                        //busbud challenge template clearing workaround
+                        if(xhr.status == 404) {
+                            resolve({"suggestions": []});
                         }
                     }
                     xhr.onerror = function(e) {
