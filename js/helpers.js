@@ -33,7 +33,10 @@ var helpers = (function(){
                     var xhr = new XMLHttpRequest();
                     xhr.open(method, url, true);
                     xhr.onreadystatechange = function() {
-                        if(xhr.status == 200 && xhr.readyState == 4) {
+                        //putting xhr.status == 404 as a hack
+                        //for busbud challenge
+                        //so the templates clear
+                        if(xhr.status == 200 || xhr.status == 404 && xhr.readyState == 4) {
                             resolve(JSON.parse(xhr.responseText));
                         }
                     }
