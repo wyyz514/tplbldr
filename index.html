@@ -1,63 +1,113 @@
 <!doctype html>
 <html>
-    <head>
-        <meta charset="utf8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    </head>
-    <body>
-        <script src="/js/helpers.js"></script>
-        <script src="/js/tplbuilder.js"></script>
-        <script>
-            var getRequest = helpers.makeRequest("GET");
-            getRequest("https://jsonplaceholder.typicode.com/users").then(function(data) {
-               
-                var personTpl = {
-                    wrapper:{
-                        classList:[],
-                        el:'div',
-                        listeners:[{
-                            ev:"click",
-                            target:".with-attr",
-                            handler: function (e) {
-                                var targetElement = e.target;
-                                console.log(targetElement.innerHTML);
-                            }
-                        }]
-                    },
-                    tpl:
-                    "Username: <div class='with-attr' data-attr='username'></div>"+
-                    "Email: <div class='with-attr' data-attr='email'></div>"+
-                    "Website: <div class='with-attr' data-attr='website'></div>"+
-                    "Company: <div class='with-attr' data-attr='company.name'></div>"+
-                    "City: <div class='with-attr' data-attr='residence'></div>"+
-                    "Profile: <a class='with-attr' data-attr='profileLink'>Profile</a>"+
-                    "<br>"
-                };
 
-                TplBuilder.getBuiltTemplate(personTpl, data, "body", {
-                    toBuild: {
-                        username: ["name"],
-                        residence: ["address.suite", "address.city"]
-                    },
-                    toFormat: {
-                        username: ["lower", "join"],
-                        "email": ["lower"],
-                        "company.name": ["upper"],
-                        "address.city": ["capitalize"]
-                    },
-                    toLink: {
-                        'profileLink': {
-                            link:"/{id}/{username}/profile/{address.city}",
-                            "attrToFill": "profileLink"
+<head>
+    <meta charset="utf8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Heebo:400,700" />
+</head>
+
+<body>
+    <div id="infinite-scroll-container">
+        <div id="tpls"></div>
+        <div id="loading"></div>
+    </div>
+    <script src="/js/infinite-scroll.js"></script>
+    <script src="/js/helpers.js"></script>
+    <script src="/js/tplbuilder.js"></script>
+    <script>
+        var getRequest = helpers.makeRequest("GET");
+        var renderFunction;
+        getRequest("https://jsonplaceholder.typicode.com/users").then(function(data) {
+
+            var personTpl = {
+                wrapper: {
+                    classList: ['tpl-container'],
+                    el: 'div',
+                    listeners: [{
+                        ev: "click",
+                        target: ".with-attr",
+                        handler: function(e) {
+                            var targetElement = e.target;
+                            console.log(targetElement.innerHTML);
                         }
+                    }]
+                },
+                tpl: "Username: <span class='with-attr' data-attr='username'></span><br>" +
+                    "Email: <span class='with-attr' data-attr='email'></span><br>" +
+                    "Website: <span class='with-attr' data-attr='website'></span><br>" +
+                    "Company: <span class='with-attr' data-attr='company.name'></span><br>" +
+                    "City: <span class='with-attr' data-attr='residence'></span><br>" +
+                    "Profile: <a class='with-attr' data-attr='profileLink'>Profile</a>" +
+                    "<br>"
+            };
+
+            renderFunction = TplBuilder.getBuiltTemplate(personTpl, data, "#tpls", {
+                count: 2,
+                toBuild: {
+                    username: ["name"],
+                    residence: ["address.suite", "address.city"]
+                },
+                toFormat: {
+                    username: ["lower", "join"],
+                    "email": ["lower"],
+                    "company.name": ["upper"],
+                    "address.city": ["capitalize"]
+                },
+                toLink: {
+                    'profileLink': {
+                        link: "/{id}/{username}/profile/{address.city}",
+                        "attrToFill": "profileLink"
                     }
-                }, true)
-                
-            }).catch(function(e) {
-                console.log(e);
-            });
+                }
+            }, true);
 
+            InfiniteScroll.subscribe("dragEnd", renderFunction);
+        }).catch(function(e) {
+            console.log(e);
+        });
+    </script>
+    <style>
+        * {
+            font-family: Heebo;
+            font-weight: 400;
+        }
 
-        </script>
-    </body>
+        .tpl-container {
+            margin: 0px auto;
+            font-size: 12px;
+            font-weight: 700;
+            width: 320px;
+            padding: 5px;
+            box-sizing: border-box;
+        }
+
+        #infinite-scroll-container {
+            border: 1px solid #cecece;
+            width: 320px;
+            margin: auto;
+            position: relative;
+            cursor: pointer;
+            user-select: none;
+            overflow: hidden;
+        }
+
+        #tpls {
+            position: relative;
+            background-color: #fff;
+            transition: all 0.5s ease-in-out;
+        }
+
+        #loading {
+            height: 100%;
+            width: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: -1;
+            background-color: #cecece;
+        }
+    </style>
+</body>
+
 </html>

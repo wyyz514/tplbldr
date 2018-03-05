@@ -41,7 +41,7 @@ TplBuilder.prototype.prepare = function() {
     var elToReturn = null;
 
     try {
-        if(this.template.wrapper) {
+        if (this.template.wrapper) {
             var wrapper = this.template.wrapper;
             var el = wrapper.el; //element name ie div, p, span, section etc
             var classList = wrapper.classList; //classes to add to the template wrapper's classList
@@ -49,10 +49,10 @@ TplBuilder.prototype.prepare = function() {
 
             //if the template wrapper is defined with a desired element name,
             //that element is created and class attributes added as well as listeners
-            if(el) {
-                elToReturn  = document.createElement(el);
+            if (el) {
+                elToReturn = document.createElement(el);
 
-                if(classList) {
+                if (classList) {
                     var classes = classList.join(" ");
                     elToReturn.setAttribute("class", classes);
                 }
@@ -60,8 +60,8 @@ TplBuilder.prototype.prepare = function() {
             //append the tpl string to the template wrapper    
             elToReturn.innerHTML = this.template.tpl;
 
-            if(listeners) {
-                listeners.map(function(l){
+            if (listeners) {
+                listeners.map(function(l) {
                     //find the element(s) to add the listener to
                     var targetEl = elToReturn.querySelectorAll(l.target);
                     var targetElArray = helpers.makeArray.call(targetEl);
@@ -71,7 +71,8 @@ TplBuilder.prototype.prepare = function() {
                 });
             }
         }
-    }catch(e) {
+    }
+    catch (e) {
         throw new Error("[ TplBuilder->prepare ] " + e);
     }
     return elToReturn;
@@ -99,7 +100,7 @@ TplBuilder.prototype.appendToDom = function(content) {
 */
 TplBuilder.prototype.empty = function() {
     var domTarget = document.querySelector(this.domTarget);
-    if(!domTarget) {
+    if (!domTarget) {
         throw new Error("[ TplBuilder->empty ] Could not find target specified");
     }
     else {
@@ -120,7 +121,7 @@ TplBuilder.prototype.empty = function() {
       eg (setting data-id on a button for use in a url when the button is clicked)
 */
 TplBuilder.prototype.build = function() {
-    var otherProps = arguments[0] ? arguments[0]:null;
+    var otherProps = arguments[0] ? arguments[0] : null;
     var itemContainer = this.prepare();
     //returns a function expecting the template wrapper element as an argument    
     var setItemProps = this.setProps("data-attr", this.data, otherProps);
@@ -143,12 +144,12 @@ TplBuilder.prototype.build = function() {
 
 TplBuilder.combine = function(tplBuilders, domTarget, render) {
     var domTargetEl = document.querySelector(domTarget);
-    var combined = tplBuilders.reduce(function(prev, next){
+    var combined = tplBuilders.reduce(function(prev, next) {
         //make a 1-D array of built templates
         return prev.concat(next);
-    }, []).map(function(elTemplate){
+    }, []).map(function(elTemplate) {
         //if render, then append to the DOM immediately
-        if(render)
+        if (render)
             helpers.appendTo(domTarget)(elTemplate);
         return elTemplate;
     });
@@ -173,13 +174,38 @@ TplBuilder.combine = function(tplBuilders, domTarget, render) {
   -----------------
 */
 TplBuilder.getBuiltTemplate = function getBuiltTemplate(tpl, data, domTargetSelector, otherBuildProps, render) {
-    var tplsWithProps = data.map(function(d){
+
+    var lastIndex = 0;
+    var itemsToRender = otherBuildProps.count || data.length;
+    var alreadyBuiltTpls = [];
+
+    alreadyBuiltTpls = data.slice(0, itemsToRender).map(function(d) {
         var tplBuilder = new TplBuilder(tpl, d, domTargetSelector);
-        var tplWithProps = otherBuildProps? tplBuilder.build(otherBuildProps) : tplBuilder.build();
-        if(render) {
+        var tplWithProps = otherBuildProps ? tplBuilder.build(otherBuildProps) : tplBuilder.build();
+        if (render) {
             tplBuilder.appendToDom(tplWithProps);
         }
-        return tplWithProps;
+        lastIndex += itemsToRender;
+        return alreadyBuiltTpls;
     });
-    return tplsWithProps;
+
+
+    return function() {
+        if (lastIndex >= data.length) {
+            return;
+        }
+
+        var tplsWithProps = data.slice(lastIndex, lastIndex + itemsToRender).map(function(d) {
+            var tplBuilder = new TplBuilder(tpl, d, domTargetSelector);
+            var tplWithProps = otherBuildProps ? tplBuilder.build(otherBuildProps) : tplBuilder.build();
+            if (render) {
+                tplBuilder.appendToDom(tplWithProps);
+            }
+            return tplWithProps;
+        });
+
+
+        lastIndex += itemsToRender;
+        alreadyBuiltTpls = alreadyBuiltTpls.concat(tplsWithProps);
+    }
 }
