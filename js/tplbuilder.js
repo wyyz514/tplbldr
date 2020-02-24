@@ -24,6 +24,7 @@
 function TplBuilder(template, data, domTarget) {
     this.template = template;
     this.data = data;
+    this.children = '';
     this.domTarget = domTarget;
 }
 
@@ -57,7 +58,7 @@ TplBuilder.prototype.prepare = function() {
                     elToReturn.setAttribute("class", classes);
                 }
             }
-            //append the tpl string to the template wrapper    
+            //append the tpl string to the template wrapper
             elToReturn.innerHTML = this.template.tpl;
 
             if (listeners) {
@@ -123,7 +124,7 @@ TplBuilder.prototype.empty = function() {
 TplBuilder.prototype.build = function() {
     var otherProps = arguments[0] ? arguments[0] : null;
     var itemContainer = this.prepare();
-    //returns a function expecting the template wrapper element as an argument    
+    //returns a function expecting the template wrapper element as an argument
     var setItemProps = this.setProps("data-attr", this.data, otherProps);
     //returns the built template with the data filled out
     var readyItem = setItemProps(itemContainer);
@@ -174,38 +175,18 @@ TplBuilder.combine = function(tplBuilders, domTarget, render) {
   -----------------
 */
 TplBuilder.getBuiltTemplate = function getBuiltTemplate(tpl, data, domTargetSelector, otherBuildProps, render) {
-
-    var lastIndex = 0;
-    var itemsToRender = otherBuildProps.count || data.length;
-    var alreadyBuiltTpls = [];
-
-    alreadyBuiltTpls = data.slice(0, itemsToRender).map(function(d) {
+    var alreadyBuiltTpls = data.map(function(d) {
         var tplBuilder = new TplBuilder(tpl, d, domTargetSelector);
+        if (d.hasOwnProperty(tpl.childrenKey)) {
+            tplBuilder.children = TplBuilder.getBuiltTemplate(tpl, d.children, null, null, false);
+            otherBuildProps = otherBuildProps ? otherBuildProps : {};
+            otherBuildProps['$children'] = tplBuilder.children;
+        }
         var tplWithProps = otherBuildProps ? tplBuilder.build(otherBuildProps) : tplBuilder.build();
         if (render) {
             tplBuilder.appendToDom(tplWithProps);
         }
-        lastIndex += itemsToRender;
-        return alreadyBuiltTpls;
+        return tplWithProps.outerHTML;
     });
-
-
-    return function() {
-        if (lastIndex >= data.length) {
-            return;
-        }
-
-        var tplsWithProps = data.slice(lastIndex, lastIndex + itemsToRender).map(function(d) {
-            var tplBuilder = new TplBuilder(tpl, d, domTargetSelector);
-            var tplWithProps = otherBuildProps ? tplBuilder.build(otherBuildProps) : tplBuilder.build();
-            if (render) {
-                tplBuilder.appendToDom(tplWithProps);
-            }
-            return tplWithProps;
-        });
-
-
-        lastIndex += itemsToRender;
-        alreadyBuiltTpls = alreadyBuiltTpls.concat(tplsWithProps);
-    }
-}
+    return alreadyBuiltTpls;
+};

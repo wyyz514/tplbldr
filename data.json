@@ -1,0 +1,100 @@
+[
+  {
+    "categoryId": 240,
+    "id": 4644191,
+    "name": "White & Blue Blazer Mid '77 Vintage Sneakers",
+    "sku": "201011M236019",
+    "brand": "Nike",
+    "image": "https://c.static-nike.com/a/images/c_limit,w_592,f_auto/t_product_v1/llweutvhwqmoppimyvc5/react-element-55-shoe-psLp45.jpg",
+    "url": "/men/product/nike/white-and-blue-blazer-mid-77-vintage-sneakers/4644191",
+    "price": {
+      "regular": 135,
+      "sale": 0,
+      "currency": "CAD",
+      "formattedPrice": "$135",
+      "formattedSale": "$0"
+    }
+  },
+  {
+    "categoryId": 241,
+    "id": 4638821,
+    "name": "Black & Red Air Max Plus III Sneakers",
+    "sku": "201011M237092",
+    "brand": "Nike",
+    "image": "https://c.static-nike.com/a/images/c_limit,w_592,f_auto/t_product_v1/21595001-7b99-4188-9e2c-fb98f966c55b/air-max-720-shoe-xBvD5Q.jpg",
+    "url": "/men/product/nike/black-and-red-air-max-plus-iii-sneakers/4638821",
+    "price": {
+      "regular": 250,
+      "sale": 0,
+      "currency": "CAD",
+      "formattedPrice": "$250",
+      "formattedSale": "$0"
+    }
+  },
+  {
+    "categoryId": 241,
+    "id": 4688161,
+    "name": "White & Blue Air Force 1 '07 Sneakers",
+    "sku": "201011M237135",
+    "brand": "Nike",
+    "image": "https://c.static-nike.com/a/images/c_limit,w_592,f_auto/t_product_v1/b62jcttnfsw1q63nppgs/react-sertu-shoe-xL4QH3.jpg",
+    "url": "/men/product/nike/white-and-blue-air-force-1-07-sneakers/4688161",
+    "price": {
+      "regular": 120,
+      "sale": 0,
+      "currency": "CAD",
+      "formattedPrice": "$120",
+      "formattedSale": "$0"
+    }
+  },
+  {
+    "categoryId": 241,
+    "id": 4644081,
+    "name": "Red Waffle Racer Sneakers",
+    "sku": "201011M237104",
+    "brand": "Nike",
+    "image": "https://c.static-nike.com/a/images/c_limit,w_592,f_auto/t_product_v1/abzeibhhtnc0dukpovdf/react-element-55-se-shoe-jw3mgk.jpg",
+    "url": "/men/product/nike/red-waffle-racer-sneakers/4644081",
+    "price": {
+      "regular": 115,
+      "sale": 0,
+      "currency": "CAD",
+      "formattedPrice": "$115",
+      "formattedSale": "$0"
+    }
+  },
+  {
+    "categoryId": 241,
+    "id": 4734941,
+    "name": "Grey & Green Air VaporMax Flyknit 3 Sneakers",
+    "sku": "201011M237138",
+    "brand": "Nike",
+    "image": "https://c.static-nike.com/a/images/c_limit,w_592,f_auto/t_product_v1/ezh5obxpqxr0gcbos3f7/air-pegasus-92-lite-shoe-V7H355.jpg",
+    "url": "/men/product/nike/grey-and-green-air-vapormax-flyknit-3-sneakers/4734941",
+    "price": {
+      "regular": 250,
+      "sale": 0,
+      "currency": "CAD",
+      "formattedPrice": "$250",
+      "formattedSale": "$0"
+    }
+  },
+  {
+    "categoryId": 241,
+    "id": 4734941,
+    "name": "Grey & Green Air VaporMax Flyknit 3 Sneakers",
+    "sku": "201011M237138",
+    "brand": "Nike",
+    "image": "https://c.static-nike.com/a/images/c_limit,w_592,f_auto/t_product_v1/d746009c-10cf-4a23-9fa8-623564104969/ghoswift-shoe-GDP61D.jpg",
+    "url": "/men/product/nike/grey-and-green-air-vapormax-flyknit-3-sneakers/4734941",
+    "price": {
+      "regular": 250,
+      "sale": 0,
+      "currency": "CAD",
+      "formattedPrice": "$250",
+      "formattedSale": "$0"
+    }
+  }
+]
+
+

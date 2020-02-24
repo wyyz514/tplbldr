@@ -1,0 +1,311 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf8" />
+    <meta name="viewport" content="initial-scale=1,user-scalable=no,width=device-width" />
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Mukta|Inria+Serif" />
+</head>
+<body>
+    <nav role="navigation">
+        <div class="navbar">
+            <div class="navbar-inner">
+                <div class="navbar__logo">DROPSHOP</div>
+                <div class="navbar__links">
+                    <ul>
+                        <li>Link 1</li>
+                        <li>Link 2</li>
+                        <li>Link 3</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </nav>
+    <main role="main">
+        <section class="hero" aria-label="hero">
+            <div class="hero-inner">
+                <div class="hero__text">Shop till you drop</div>
+            </div>
+        </section>
+        <section class="products">
+            <div class="products-inner">
+                <div class="facets-overlay"></div>
+                <aside class="products-facets">
+                </aside>
+                <div class="products-row"></div>
+            </div>
+        </section>
+        <div class="facets-mobile-trigger">
+            Filters
+        </div>
+    </main>
+</body>
+<style>
+    * {
+        box-sizing: border-box;
+    }
+
+    body {
+        margin: 0 !important;
+    }
+
+    .navbar {
+        width: 100%;
+        position: absolute;
+        top: 0;
+        left: 0;
+    }
+
+    .navbar-inner {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        font-family: 'Mukta';
+        padding: 10px;
+    }
+
+    .navbar__logo {
+        font-weight: bold;
+        color: white;
+        font-size: 18px;
+        letter-spacing: 2px;
+    }
+
+    .navbar__links ul{
+        list-style: none;
+    }
+
+    .navbar__links li {
+        display: inline-block;
+        min-width: 80px;
+        text-align: center;
+        color: white;
+        font-size: 18px;
+    }
+
+    .hero {
+        height: 600px;
+        width: 100%;
+        background: black url('https://images.unsplash.com/photo-1503540774582-7f75badc26cb?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2634&q=80') no-repeat;
+        background-size: cover;
+    }
+
+    .hero-inner {
+        position: relative;
+        height: 100%;
+    }
+
+    .hero__text {
+        font-family: "Inria Serif";
+        position: absolute;
+        font-size: 84px;
+        color: white;
+        bottom: 100px;
+        word-wrap: break-word;
+        width: 340px;
+        text-shadow: 1px 1px 1px black;
+    }
+
+    .products-inner {
+        display: flex;
+    }
+
+    .products-facets {
+        width: 13%;
+        height: 100%;
+    }
+
+    .products-row {
+        padding: 20px 0;
+        display: flex;
+        flex-wrap: wrap;
+        width: 87%;
+    }
+
+    .product-card {
+        display: flex;
+        flex-direction: column;
+        width: 320px;
+        flex-grow: 1;
+        padding: 20px;
+    }
+
+    .product-card__image {
+        height: 100%;
+        width: 100%;
+    }
+
+    .product-card__image img {
+        height: 100%;
+        width: 100%;
+    }
+
+    .product-card__name {
+        padding: 10px 0;
+        font-family: "Mukta";
+        font-weight: bold;
+        text-align: center;
+    }
+
+    .product-card__price {
+        font-family: "Mukta";
+        text-align: center;
+    }
+
+    .products-facets {
+        padding: 35px 0 0 10px;
+    }
+
+    .products-facet {
+        font-family: 'Mukta';
+        font-size: 18px;
+    }
+
+    .products-facet  .products-facet {
+        padding-left: 10px;
+        background-color: #f0f0f0;
+    }
+
+    .products-facet  .products-facet .products-facet {
+        background-color: #cecece;
+        margin-left: -10px;
+        padding-left: 20px;
+    }
+
+    .products-facet__name {
+        padding: 5px 0;
+    }
+
+    @media (min-width: 1400px) {
+        [class*='inner'] {
+            width: 1400px;
+            margin: auto;
+        }
+    }
+    @media (max-width: 1399px) {
+        [class*='inner'] {
+            width: 100%;
+        }
+
+        .navbar__links li {
+            min-width: 60px;
+        }
+
+        .products-row {
+            align-items: center;
+            justify-content: center;
+        }
+    }
+
+    @media (min-width: 1024px) {
+        .facets-mobile-trigger {
+            display: none;
+        }
+    }
+
+    @media (max-width: 1023px) {
+        .products-row {
+            width: 100%;
+        }
+
+        .products-facets {
+            position: fixed;
+            width: 300px;
+            left: calc((100vw - 300px) / 2);
+            z-index: 4;
+            top: 0;
+            display: none;
+        }
+
+        .facets-overlay {
+            z-index: 3;
+            position: fixed;
+            height: 100%;
+            width: 100%;
+            background-color: #cecece;
+            opacity: 0.8;
+            top: 0;
+            left: 0;
+            display: none;
+        }
+
+        .products-facets.active,
+        .facets-overlay.active {
+            display: block;
+        }
+
+        .facets-mobile-trigger {
+            display: block;
+            position: fixed;
+            padding: 5px;
+            font-family: "Mukta";
+            text-align: center;
+            min-width: 120px;
+            color: white;
+            letter-spacing: 0.2px;
+            background-color: black;
+            border-radius: 20px;
+            bottom: 40px;
+            right: 20px;
+            z-index: 5;
+        }
+    }
+</style>
+
+<script src="./js/helpers.js"></script>
+<script src="./js/tplbuilder.js"></script>
+<script>
+    var productTpl = {
+        wrapper: {
+            classList: ['product-card'],
+            el: 'div',
+            listeners: []
+        },
+        tpl: `<div class="product-card__image">
+                    <img class="with-attr" data-attr="image" />
+                  </div>
+                 <div class="product-card__name with-attr" data-attr="name"></div>
+                 <div class="product-card__price with-attr" data-attr="localePrice"></div>`
+    };
+
+    var filtersTpl = {
+        wrapper: {
+            classList: ['products-facet'],
+            el: 'div',
+            listeners: []
+        },
+        childrenKey: 'children',
+        tpl: `<div class="products-facet__name with-attr" data-attr="name"></div>
+                   <div class="products-facet__children with-attr" data-attr="$children"></div>`
+    };
+
+    var getRequest = helpers.makeRequest("GET");
+    getRequest("./data.json").then(function(data) {
+        TplBuilder.getBuiltTemplate(productTpl, data, ".products-row",{
+            toBuild: {
+                localePrice: ['price.currency', 'price.formattedPrice']
+            }
+        }, true);
+    });
+
+    getRequest("./filters.json").then(function(data) {
+        TplBuilder.getBuiltTemplate(filtersTpl, data, ".products-facets", null, true);
+    });
+</script>
+<script>
+    (function(){
+        var facetsTrigger = document.querySelector('.facets-mobile-trigger');
+        var mobileFacets = document.querySelector('.products-facets');
+        var mobileOverlay = document.querySelector('.facets-overlay');
+
+        facetsTrigger.addEventListener('click', function () {
+            if (mobileFacets.classList.contains('active')) {
+                mobileFacets.classList.remove('active');
+                mobileOverlay.classList.remove('active');
+            } else {
+                mobileFacets.classList.add('active');
+                mobileOverlay.classList.add('active');
+            }
+        });
+    })();
+</script>
+</html>

@@ -1,0 +1,55 @@
+[
+  {
+    "name": "Brand",
+    "children": [
+      {
+        "name": "Nike",
+        "children": [
+          {
+            "name": "Blazers",
+            "children": [
+              {
+                "name": "Mid 70s",
+                "children": []
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "Asics",
+        "children": [
+          {
+            "name": "Gel Lyte III",
+            "children": []
+          }
+        ]
+      },
+      {
+        "name": "Air Jordan",
+        "children": []
+      }
+    ]
+  },
+  {
+    "name": "Size",
+    "children": [
+      {
+        "name": "Kids",
+        "children": []
+      },
+      {
+        "name": "5-7",
+        "children": []
+      },
+      {
+        "name": "8-10",
+        "children": []
+      },
+      {
+        "name": "Ok, big guy",
+        "children": []
+      }
+    ]
+  }
+]

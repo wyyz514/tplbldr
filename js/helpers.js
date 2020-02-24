@@ -38,7 +38,7 @@ var helpers = (function(){
                         }
                         //busbud challenge template clearing workaround
                         if(xhr.status == 404) {
-                            resolve({"suggestions": []});
+                            resolve("nO DaTa LoAdEd 404");
                         }
                     }
                     xhr.onerror = function(e) {
@@ -62,7 +62,7 @@ var helpers = (function(){
         //get keys of the data object
         var aKeys = Object.keys(a);
 
-        //get keys of the otherProps object and add those to the 
+        //get keys of the otherProps object and add those to the
         //keys of the data object if they don't already exist
         //IOW combine the keys into one array
         Object.keys(b).map(function(key){
@@ -76,18 +76,16 @@ var helpers = (function(){
         //a.props + b.props = newObj.props
         //note that if the same prop appears in a and b, the prop in a is used
         //and the one in b is ignored
-        aKeys.forEach(function(key){
+        aKeys.forEach(function(key) {
             if(a.hasOwnProperty(key) && dig(a, key) && !(b.hasOwnProperty(key) && dig(b, key))) {
                 newObj[key] = dig(a, key);
             }
-            else if(b.hasOwnProperty(key) && dig(b, key)){
+            else if (b.hasOwnProperty(key) && dig(b, key)){
                 newObj[key] = dig(b, key);
-            }
-            else {
+            } else {
                 newObj[key] = key + " not found";
             }
         });
-
         //for combining properties into a new property
         //ie prop[name] = prop[firstname] +  prop[lastname]
         if(b['toBuild']) {
@@ -146,18 +144,18 @@ var helpers = (function(){
                 try {
 
                     var match;
-                    
+
                     //find the word between the braces to replace
                     while((match = wordBetweenBraces.exec(linkWithParam)) != null) {
                         var paramKey = match[1];
-                        
+
                         //find the value of the word in the object
-                        var replacementParam = dig(newObj, paramKey) ? 
-                            dig(newObj, paramKey) : 
+                        var replacementParam = dig(newObj, paramKey) ?
+                            dig(newObj, paramKey) :
                             dig(newObj, b['toLink'][key].fallbackParam);
 
-                        linked = linked ? 
-                            linked.replace("{"+paramKey+"}", replacementParam) : 
+                        linked = linked ?
+                            linked.replace("{"+paramKey+"}", replacementParam) :
                             linkWithParam.replace("{"+paramKey+"}", replacementParam);
                     }
 
@@ -182,7 +180,6 @@ var helpers = (function(){
   obj.name
 */
     function setProps(attr, obj) {
-
         var otherProps = arguments[2];
         //returns a function expecting the wrapper element
         return function setPropsOn(el) {
@@ -192,15 +189,18 @@ var helpers = (function(){
 
             _childrenWithAttr.map(function(c){
                 var key = c.getAttribute(attr);
-
+                var value = data[key];
+                if (value && Object.prototype.toString.call(value) === '[object Array]') {
+                    value = value.join('');
+                }
                 if(key === "image" || key === 'avatar') {
-                    c.src = data[key] ? data[key] : dig(data, key);
+                    c.src = value ? value : dig(data, key);
                 }
                 else if(key.toLowerCase().match("link")){
-                    c.href = data[key] ? data[key] : dig(data, key);
+                    c.href = value ? value : dig(data, key);
                 }
                 else {
-                    c.innerHTML = (data[key] ? data[key] : dig(data, key)) || "";
+                    c.innerHTML = (value ? value : dig(data, key)) || "";
                 }
             });
 
@@ -320,7 +320,7 @@ var helpers = (function(){
 
                 if(predicate(datum))
                     return datum;
-            });    
+            });
         }
     }
 
