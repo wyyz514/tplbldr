@@ -178,7 +178,7 @@ TplBuilder.getBuiltTemplate = function getBuiltTemplate(tpl, data, domTargetSele
     var alreadyBuiltTpls = data.map(function(d) {
         var tplBuilder = new TplBuilder(tpl, d, domTargetSelector);
         if (d.hasOwnProperty(tpl.childrenKey)) {
-            tplBuilder.children = TplBuilder.getBuiltTemplate(tpl, d.children, null, null, false);
+            tplBuilder.children = TplBuilder.getBuiltTemplate(tpl, d[tpl.childrenKey], null, null, false);
             otherBuildProps = otherBuildProps ? otherBuildProps : {};
             otherBuildProps['$children'] = tplBuilder.children;
         }
